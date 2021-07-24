@@ -18,4 +18,4 @@ Open `[VERSION NUMBER].jar` in 7Zip and extract the `/assets/minecraft/textures/
 
 Convert video with:
 
-    python vid2mc.py -i [INPUT IMAGE/VIDEO PATH] [OUTPUT IMAGE/VIDEO PATH]
+    vid2mc.py -i [INPUT IMAGE/VIDEO PATH] [OUTPUT IMAGE/VIDEO PATH]

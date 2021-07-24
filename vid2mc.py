@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 import argparse
 import pickle
@@ -5,8 +6,8 @@ import cv2
 import numpy as np
 from sklearn.neighbors import KDTree
 
-block_path = 'block'
-classifier_path = 'data.pkl'
+block_path = os.path.join(os.path.dirname(__file__), 'block')
+classifier_path = os.path.join(os.path.dirname(__file__), 'data.pkl')
 
 # TODO: Update supported exts
 IMAGE_EXTS = ('.png', '.jpg', '.jpeg')
