@@ -49,7 +49,9 @@ def convert_im(im, tree, lbls, block_imgs):
     step = 16
     for r in range(0, h, step):
         for c in range(0, w, step):
-            patch = im[r:min(r+step, h), c:min(c+step, w), :]
+            rnext = min(r+step, h)
+            cnext = min(c+step, w)
+            patch = im[r:rnext, c:cnext]
             color = np.average(patch, axis=(0, 1))
 
             # Get closest block
@@ -58,14 +60,9 @@ def convert_im(im, tree, lbls, block_imgs):
             block = block_imgs[lbl]
 
             # Copy values
-            r_counter = 0
-            c_counter = 0
-            for dr in range(r, min(r+step, h)):
-                for dc in range(c, min(c+step, w)):
-                    im[dr][dc] = block[r_counter][c_counter]
-                    c_counter += 1
-                c_counter = 0
-                r_counter += 1
+            rmax = rnext-r
+            cmax = cnext-c
+            im[r:rnext, c:cnext] = block[:rmax, :cmax]
 
 
 if __name__ == '__main__':
