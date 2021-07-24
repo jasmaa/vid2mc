@@ -131,8 +131,9 @@ if __name__ == '__main__':
                 w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
             if not h:
                 h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            fps = cap.get(cv2.CAP_PROP_FPS)
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            out = cv2.VideoWriter(out_fname, fourcc, 20.0, (w, h))
+            out = cv2.VideoWriter(out_fname, fourcc, fps, (w, h))
         while cap.isOpened():
             ret, frame = cap.read()
             if not ret:
