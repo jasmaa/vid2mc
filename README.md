@@ -2,6 +2,10 @@
 
 Converts videos and images to Minecraft blocks.
 
+Inspired by December 18th's [video of a similar nature](https://www.youtube.com/watch?v=YoxflNu7l6A).
+
+![Comparison of original image and converted Minecraft blocks](docs/seven.png)
+
 ## Getting Started
 
 Install dependencies with:

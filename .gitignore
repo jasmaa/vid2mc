@@ -140,10 +140,4 @@ cython_debug/
 # Minecraft
 *.jar
 /block
-
-# Assets
-*.png
-*.jpg
 *.pkl
-*.mkv
-*.mp4
