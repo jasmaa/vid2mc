@@ -8,6 +8,10 @@ from sklearn.neighbors import KDTree
 block_path = 'block'
 classifier_path = 'data.pkl'
 
+# TODO: Update supported exts
+IMAGE_EXTS = ('.png', '.jpg', '.jpeg')
+VIDEO_EXTS = ('.avi', '.mkv', '.mp4')
+
 
 def generate_classifier(out_fname: str):
     """Generates block list
@@ -68,9 +72,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Convert videos and images to Minecraft.')
     parser.add_argument(
-        'output', help='Output video/image file. Supports JPG, PNG, MP4.')
+        'output', help='Output video/image file.')
     parser.add_argument(
-        '-i', '--input', help='Input video/image file. Supports JPG, PNG, MP4.', required=True)
+        '-i', '--input', help='Input video/image file.', required=True)
     parser.add_argument(
         '--width', help='Output width.', type=int)
     parser.add_argument(
@@ -88,21 +92,24 @@ if __name__ == '__main__':
         data = pickle.load(f)
         tree = data['tree']
         lbls = data['lbls']
-    print('Loaded classifier.')
 
     # Load block images
     print('Loading block images...')
     block_imgs = {}
     for lbl in lbls:
         block_imgs[lbl] = cv2.imread(lbl)
-    print('Loaded block images.')
 
     in_fname = args.input
     out_fname = args.output
     w = args.width
     h = args.height
 
-    if in_fname.endswith('.jpg') or in_fname.endswith('.png'):
+    # Check if in file exists
+    if not os.path.exists(in_fname):
+        print(f'Error: {in_fname} does not exist.')
+        exit(1)
+
+    if in_fname.endswith(IMAGE_EXTS):
         # Convert image
         print(f'Converting {in_fname}...')
         im = cv2.imread(in_fname)
@@ -115,7 +122,7 @@ if __name__ == '__main__':
         cv2.imwrite(out_fname, im)
         print(f'Saved to {out_fname}.')
 
-    elif in_fname.endswith('.mp4'):
+    elif in_fname.endswith(VIDEO_EXTS):
         # Convert video
         cap = cv2.VideoCapture(in_fname)
         curr_frame = 1
