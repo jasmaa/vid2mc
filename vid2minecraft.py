@@ -1,5 +1,5 @@
 import os
-import sys
+import argparse
 import pickle
 import cv2
 import numpy as np
@@ -7,8 +7,6 @@ from sklearn.neighbors import KDTree
 
 block_path = 'block'
 classifier_path = 'data.pkl'
-
-USAGE = """USAGE: python vid2minecraft.py -i [IMAGE/VIDEO PATH] [OUTPUT PATH]"""
 
 
 def generate_classifier(out_fname: str):
@@ -67,17 +65,18 @@ def convert_im(im, tree, lbls, block_imgs):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4:
-        print(USAGE)
-        exit(1)
+    parser = argparse.ArgumentParser(
+        description='Convert videos and images to Minecraft.')
+    parser.add_argument(
+        'output', help='Output video/image file. Supports JPG, PNG, MP4.')
+    parser.add_argument(
+        '-i', '--input', help='Input video/image file. Supports JPG, PNG, MP4.', required=True)
+    parser.add_argument(
+        '--width', help='Output width.', type=int)
+    parser.add_argument(
+        '--height', help='Output height.', type=int)
 
-    if '-i' not in sys.argv:
-        print(USAGE)
-        exit(1)
-    i_idx = sys.argv.index('-i')
-    if i_idx == len(sys.argv):
-        print(USAGE)
-        exit(1)
+    args = parser.parse_args()
 
     # Load classifier and labels
     if not os.path.exists(classifier_path):
@@ -98,24 +97,37 @@ if __name__ == '__main__':
         block_imgs[lbl] = cv2.imread(lbl)
     print('Loaded block images.')
 
-    in_fname = sys.argv[i_idx+1]
-    out_fname = sys.argv[-1]
+    in_fname = args.input
+    out_fname = args.output
+    w = args.width
+    h = args.height
+
     if in_fname.endswith('.jpg') or in_fname.endswith('.png'):
+        # Convert image
         print(f'Converting {in_fname}...')
         im = cv2.imread(in_fname)
+        if not w:
+            w = im.shape[1]
+        if not h:
+            h = im.shape[0]
+        im = cv2.resize(im, (w, h))
         convert_im(im, tree, lbls, block_imgs)
         cv2.imwrite(out_fname, im)
         print(f'Saved to {out_fname}.')
-    elif in_fname.endswith('.mkv') or in_fname.endswith('.mp4'):
+
+    elif in_fname.endswith('.mp4'):
+        # Convert video
         cap = cv2.VideoCapture(in_fname)
         curr_frame = 1
         total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
         if cap.isOpened():
-            w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-            h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            if not w:
+                w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            if not h:
+                h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            out = cv2.VideoWriter('output.mp4', fourcc, 20.0, (w, h))
+            out = cv2.VideoWriter(out_fname, fourcc, 20.0, (w, h))
         while cap.isOpened():
             ret, frame = cap.read()
             if not ret:
@@ -127,4 +139,4 @@ if __name__ == '__main__':
             curr_frame += 1
         cap.release()
         out.release()
-        print('Saved to output.mp4.')
+        print(f'Saved to {out_fname}.')
