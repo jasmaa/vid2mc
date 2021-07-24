@@ -106,3 +106,25 @@ if __name__ == '__main__':
         convert_im(im, tree, lbls, block_imgs)
         cv2.imwrite(out_fname, im)
         print(f'Saved to {out_fname}.')
+    elif in_fname.endswith('.mkv') or in_fname.endswith('.mp4'):
+        cap = cv2.VideoCapture(in_fname)
+        curr_frame = 1
+        total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+        if cap.isOpened():
+            w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+            h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            out = cv2.VideoWriter('output.mp4', fourcc, 20.0, (w, h))
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret:
+                break
+            frame = cv2.resize(frame, (w, h))
+            convert_im(frame, tree, lbls, block_imgs)
+            out.write(frame)
+            print(f'Converting frame {curr_frame}/{total_frames}...')
+            curr_frame += 1
+        cap.release()
+        out.release()
+        print('Saved to output.mp4.')

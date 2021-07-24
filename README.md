@@ -2,7 +2,7 @@
 
 Converts videos and images to Minecraft blocks.
 
-# Getting Started
+## Getting Started
 
 Install dependencies with:
 
@@ -14,4 +14,4 @@ Open `[VERSION NUMBER].jar` in 7Zip and extract the `/assets/minecraft/textures/
 
 Convert video with:
 
-    python vid2minecraft.py -i [IMAGE/VIDEO PATH] [OUTPUT PATH]
+    python vid2minecraft.py -i [INPUT IMAGE/VIDEO PATH] [OUTPUT IMAGE/VIDEO PATH]

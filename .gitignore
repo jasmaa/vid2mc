@@ -145,3 +145,5 @@ cython_debug/
 *.png
 *.jpg
 *.pkl
+*.mkv
+*.mp4
