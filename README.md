@@ -14,7 +14,7 @@ Install dependencies with:
 
 Download Minecraft and retrieve `[VERSION NUMBER].jar` (this will be under `%appdata%/.minecraft/versions/[VERSION NUMBER]` on Windows).
 
-Open `[VERSION NUMBER].jar` in 7Zip and extract the `/assets/minecraft/textures/block` folder to the repo root as `./block`.
+Open `[VERSION NUMBER].jar` in 7Zip and extract the `/assets/minecraft/textures/block` folder to the repo root as the directory `block`.
 
 Convert video with:
 
